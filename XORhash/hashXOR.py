@@ -37,11 +37,13 @@ def CreateBlocks(plain, block_size):
 
 ##################################################
 
-def Hash_Func(list_of_blocks):
-    cipher_block = "00001111"
+def Hash_Func(list_of_blocks, key):
+    cipher_block = key
     for block in list_of_blocks:
         print(block)
-        ciper_block = block XOR cipher_block
+        print(cipher_block)
+        cipher_block = Encrypt(block, cipher_block)
+    return cipher_block
 
 ##################################################
 ## Main()
@@ -60,9 +62,14 @@ print(key)
 
 print(list_of_blocks)
 
-hash_value = Hash_Func(list_of_blocks)
+hash_value = Hash_Func(list_of_blocks, key)
 
+print(hash_value)
 
+print(  hash_value.hex()  )
+
+print(    bin( int( hash_value.hex(), 16) )           )
+print(    bin( int( hash_value.hex(), 16) ).zfill(8)           )
 
 ## cipher = Encrypt(plain_text, key)
 ## print( cipher  )
