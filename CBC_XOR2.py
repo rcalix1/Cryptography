@@ -80,8 +80,14 @@ def main():
 
     myMessage = "this is a message 1234567890987654321qwretrutiyp gdgfsvxv jdhfyti jfh"
 
-    print("enter a message to encrypt: ")
-    myMessage = input()
+    ## print("enter a message to encrypt: ")
+    ## myMessage = input()
+
+    f_in = open("plain_text_cbc.txt", 'r')
+
+    myMessage = f_in.read()
+    myMessage = myMessage.replace("\n", "")
+    print(myMessage)
 
     len_of_block = 8
 
@@ -101,6 +107,15 @@ def main():
     cipher_list = encrypt_message(blockList, key, iv, len_of_block)
 
     print(  cipher_list   )
+    
+    f_out = open("the_cipher.bin", "w")
+
+    for i in range(len(cipher_list)):
+        str_cipher = str(  cipher_list[i]   )
+        print(str_cipher)
+        print(cipher_list[i])
+        f_out.write(str_cipher + "\n" )
+    f_out.close()
 
     decrypted_list = decrypt_cipher(  cipher_list, key, iv   )
 
