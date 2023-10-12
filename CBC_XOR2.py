@@ -1,6 +1,6 @@
 
 from os import urandom
-
+import pickle
 
 #######################################
 
@@ -117,9 +117,24 @@ def main():
         f_out.write(str_cipher + "\n" )
     f_out.close()
 
-    decrypted_list = decrypt_cipher(  cipher_list, key, iv   )
+    ###############################################
 
-    print(decrypted_list)
+    file_x = open('pickle_cipher_list', 'wb')
+    pickle.dump(cipher_list, file_x)
+    file_x.close()
+
+    ###############################################
+
+    file_y = open('pickle_cipher_list', 'rb')
+    from_pickle_cipher_list = pickle.load(file_y)
+    file_y.close()
+
+    ###############################################
+    print('******************************')
+    print('after pickle')
+    pk_decrypted_list = decrypt_cipher(  from_pickle_cipher_list, key, iv   )
+
+    print(pk_decrypted_list)
 
 
     return
