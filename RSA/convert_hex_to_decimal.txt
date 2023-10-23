@@ -1,0 +1,11 @@
+
+
+$ HEX_MODULUS=$(openssl rsa -pubin -in my_public_key.pem  -modulus | grep 'Modulus=' |  cut -d'=' -f 2)
+
+
+$ sudo apt update
+$ sudo apt install ruby
+
+$ ruby<<EOF
+p "$HEX_MODULUS".to_i(16).to_s(10)
+EOF
