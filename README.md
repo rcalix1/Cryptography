@@ -10,4 +10,9 @@ XOR message with key as big as message (One Time Pad). Defined by Claude Shannon
 
 * openssl lets you generate RSA keys as short as 31 bits
 * $ openssl genrsa 31
+
+## TLS
+
+* The protocol of SSL
+* TLS stands for Transport Layer Security
 * 
