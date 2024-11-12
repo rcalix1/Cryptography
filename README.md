@@ -20,7 +20,7 @@ XOR message with key as big as message (One Time Pad). Defined by Claude Shannon
 * The handshake relies on certificates and certificate authorities
 * $ openssl s_client -connect www.google.com:443
 
-## Is there any particular reason to use Diffie-Hellman over RSA for key exchange in TLS?
+## Is there any particular reason to use Diffie-Hellman over RSA for key exchange in TLS 1.3?
 
 * aNSWER: Forward Secrecy
 * Diffie-Hellman defines a key exchange mechanism that allows a client and a server to exchange secret keys in the presence of an eavesdropper
