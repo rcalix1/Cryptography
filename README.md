@@ -22,7 +22,7 @@ XOR message with key as big as message (One Time Pad). Defined by Claude Shannon
 
 ## Is there any particular reason to use Diffie-Hellman over RSA for key exchange in TLS 1.3?
 
-* aNSWER: Forward Secrecy
+* ANSWER: Forward Secrecy
 * Diffie-Hellman defines a key exchange mechanism that allows a client and a server to exchange secret keys in the presence of an eavesdropper
 * In a TLS connection using the Diffie-Hellman key exchange, for every new connection from a client, the server typically generates a fresh Diffie-Hellman public-private key pair that is used to exchange keys for that session
 * These are known as ephemeral key pairs
