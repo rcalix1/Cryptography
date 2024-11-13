@@ -10,6 +10,9 @@ XOR message with key as big as message (One Time Pad). Defined by Claude Shannon
 
 * openssl lets you generate RSA keys as short as 31 bits
 * $ openssl genrsa 31
+* $ openssl s_client -connect www.google.com:443
+* ECC can be faster than RSA because it uses smaller numbers
+* $ openssl speed ecdsap256 rsa4096
 
 ## TLS
 
