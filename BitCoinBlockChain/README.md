@@ -6,6 +6,25 @@
 
 ## Simple blockchain mining example
 
+
+Explanation:
+
+    Block class: Represents a block in the blockchain, containing data, a hash, and a nonce.
+    
+    mine_block function: Iteratively increments the nonce until the block's hash meets the specified difficulty (number of leading zeros).
+    
+    create_genesis_block function: Creates the initial block in the blockchain.
+    
+    Main execution: Creates a blockchain, mines a few blocks, and prints their hashes. 
+
+Important points:
+
+    This is a highly simplified example. Real-world blockchain mining involves far more complex algorithms and intense competition.
+    
+    The difficulty level in this example is very low. In practice, it's much higher, making mining computationally expensive.
+    
+    This code does not address consensus mechanisms, network communication, or other critical aspects of real blockchains.
+
 ```
 import hashlib
 import time
