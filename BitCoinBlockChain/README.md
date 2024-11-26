@@ -32,7 +32,7 @@ def mine_block(previous_block, data, difficulty):
 
 def create_genesis_block():
     return Block(0, "0", "Genesis Block")
-
+...
 if __name__ == "__main__":
     blockchain = [create_genesis_block()]
     previous_block = blockchain[0]
