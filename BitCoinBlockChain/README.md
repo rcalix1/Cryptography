@@ -6,6 +6,7 @@
 
 ## Simple blockchain mining example
 
+...
 import hashlib
 import time
 
@@ -41,3 +42,4 @@ if __name__ == "__main__":
         blockchain.append(new_block)
         previous_block = new_block
         print(f"Block {i} mined: {new_block.hash}")
+...
