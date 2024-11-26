@@ -6,6 +6,8 @@
 
 ## Simple blockchain mining example
 
+* mining a block - very simple example 
+
 
 Explanation:
 
