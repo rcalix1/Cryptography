@@ -51,7 +51,7 @@ Alice                                   Bob
 
 ---
 
-## 🧠 ITS454 XOR Operation (Lecture 4)
+## 🧠 XOR Operation (Lecture 4)
 
 ### Concept
 
