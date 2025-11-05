@@ -296,3 +296,109 @@ C = K ⊕ M
 * Not practical:
 
   * If message is long, so is the key
+
+
+
+
+
+# Toy AES Cipher: SubBytes and ShiftRows Explained
+
+This document explains the **core ideas of AES encryption** as implemented in a simplified (toy) Python version using 8-byte blocks. The main focus is on the two critical AES transformations:
+
+* `SubBytes` (non-linear substitution)
+* `ShiftRows` (byte permutation)
+
+---
+
+## 1. SubBytes (S-Box Substitution)
+
+Each byte of the block is replaced using a substitution box (S-Box), which maps values in a non-linear way.
+
+### Toy S-Box Used:
+
+```text
+Index → SBOX value
+  0   →   6
+  1   →   4
+  2   →  12
+  3   →   5
+  4   →   0
+  5   →   7
+  6   →   2
+  7   →  14
+  8   →   1
+  9   →  15
+ 10   →   3
+ 11   →  13
+ 12   →   8
+ 13   →  10
+ 14   →   9
+ 15   →  11
+```
+
+### Example:
+
+```python
+input_block = [0, 1, 2, 3, 4, 5, 6, 7]
+sub_bytes(input_block) → [6, 4, 12, 5, 0, 7, 2, 14]
+```
+
+> Each number is replaced using the S-Box based on its value.
+
+---
+
+## 2. ShiftRows (Byte Permutation)
+
+In real AES, this step shifts rows of the state matrix. In this toy version, we simulate it with a hardcoded reordering.
+
+### Input After SubBytes:
+
+```python
+block = [6, 4, 12, 5, 0, 7, 2, 14]
+```
+
+### Toy ShiftRows Implementation:
+
+```python
+shifted = [
+    block[0], block[5], block[2], block[7],
+    block[4], block[1], block[6], block[3]
+]
+```
+
+### Result:
+
+```python
+shifted = [6, 7, 12, 14, 0, 4, 2, 5]
+```
+
+> This shuffles the bytes to simulate the AES row shifts, increasing diffusion.
+
+---
+
+## Summary Table
+
+| Step          | What It Does      | Example Input         | Example Output        |
+| ------------- | ----------------- | --------------------- | --------------------- |
+| **SubBytes**  | Replace via S-Box | `[0,1,2,3,...]`       | `[6,4,12,5,...]`      |
+| **ShiftRows** | Shuffle positions | `[6,4,12,5,0,7,2,14]` | `[6,7,12,14,0,4,2,5]` |
+
+These steps give AES its strength:
+
+* **SubBytes** → confusion (non-linearity)
+* **ShiftRows** → diffusion (spreading input influence)
+
+---
+
+## Next Step
+
+To complete the toy AES model, you can add:
+
+* AddRoundKey (XOR with round key)
+* Multiple rounds
+* MixColumns (optional for stronger diffusion)
+
+This toy model helps build intuition before working with full 128-bit AES.
+
+
+
