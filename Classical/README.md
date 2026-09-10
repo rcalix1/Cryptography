@@ -4,7 +4,7 @@
 
 ## ASCII Table
 
-* https://rcalix1.github.io/Cryptography/Classical/ASCII_Table_Hex.pdf
+* https://rcalix1.github.io/Cryptography/Classical/ASCII_Code_Hex.pdf
 * 
 
 
