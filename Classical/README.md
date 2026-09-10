@@ -1,5 +1,12 @@
 ## Pre-Modern Ciphers
 
+* link
+
+## ASCII Table
+
+* https://rcalix1.github.io/Cryptography/Classical/ASCII_Table_Hex.pdf
+* 
+
 
 ## 🔄 Inverted Number Cipher — Concept
 
