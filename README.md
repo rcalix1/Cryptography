@@ -319,59 +319,43 @@ C = K ⊕ M
 
 2. The idea in the **stream cipher** is to replace the totally random key with a **pseudorandom key**.
 
-A **PRG (Pseudorandom Generator)** is a function \(G\) that takes a seed:
+A **PRG (Pseudorandom Generator)** is a function `G` that takes a short seed and generates a much longer pseudorandom sequence.
 
-\[
-G : \{0,1\}^{s} \rightarrow \{0,1\}^{n}
-\]
+**G: {0,1}^s → {0,1}^n**
 
-where \(s\) is the length of the seed and \(n\) is much larger than \(s\).
+where `s` is the length of the seed and `n` is much larger than `s`:
 
-The function \(G\) maps the short **seed** string to a much larger key:
+**n >> s**
 
-\[
-G : \{0,1\}^{s} \rightarrow \{0,1\}^{n}
-\]
+The generator `G` must be **efficiently computable**.
 
-where:
-
-\[
-n \gg s
-\]
-
-The generator \(G\) must be **efficiently computable**.
-
-The function \(G\) is deterministic; only the **seed** is random.
+The function `G` is deterministic; only the **seed** is random.
 
 ---
 
 ## How the Pseudorandom Generator Is Used
 
-The "seed," which is short, is the key \(K\).
+The seed, which is short, is the key `K`.
 
-The generator \(G\) expands the seed:
+The generator `G` expands the seed:
 
-\[
-K \rightarrow G(K)
-\]
+**K → G(K)**
 
 This produces the pseudorandom sequence.
 
 We then XOR the pseudorandom sequence with the message:
 
-\[
-c = m \oplus G(K)
-\]
+**c = m ⊕ G(K)**
 
 So the encryption and decryption functions are:
 
-\[
-c = E(K,m) := m \oplus G(K)
-\]
+**c = E(K,m) := m ⊕ G(K)**
 
-\[
-D(K,c) := c \oplus G(K)
-\]
+**D(K,c) := c ⊕ G(K)**
+
+Since XORing twice with the same value cancels it:
+
+**m = c ⊕ G(K)**
 
 ---
 
@@ -381,15 +365,13 @@ Encryption itself is as simple as it can be. You just XOR the byte from the pseu
 
 You generate the same pseudorandom byte stream for decryption. The decryption itself consists of XORing the received byte with the pseudorandom byte.
 
-Encryption and decryption therefore use the same basic operation:
+Encryption:
 
-\[
-c = m \oplus G(K)
-\]
+**c = m ⊕ G(K)**
 
-\[
-m = c \oplus G(K)
-\]
+Decryption:
+
+**m = c ⊕ G(K)**
 
 ---
 
@@ -397,41 +379,27 @@ m = c \oplus G(K)
 
 WEP has used stream ciphers such as this. The implementation was incorrect and therefore it is insecure.
 
-If you have two ciphers generated with the same key, then the cipher can be broken:
+If you have two ciphertexts generated with the same key:
 
-\[
-C_1 = m_1 \oplus PRG(K)
-\]
+**C₁ = m₁ ⊕ PRG(K)**
 
-\[
-C_2 = m_2 \oplus PRG(K)
-\]
+**C₂ = m₂ ⊕ PRG(K)**
 
 XOR the two ciphertexts:
 
-\[
-C_1 \oplus C_2
-\]
+**C₁ ⊕ C₂**
 
 Then:
 
-\[
-C_1 \oplus C_2
-=
-(m_1 \oplus PRG(K)) \oplus (m_2 \oplus PRG(K))
-\]
+**C₁ ⊕ C₂ = (m₁ ⊕ PRG(K)) ⊕ (m₂ ⊕ PRG(K))**
 
-Since:
+Because:
 
-\[
-PRG(K) \oplus PRG(K) = 0
-\]
+**PRG(K) ⊕ PRG(K) = 0**
 
 we obtain:
 
-\[
-C_1 \oplus C_2 = m_1 \oplus m_2
-\]
+**C₁ ⊕ C₂ = m₁ ⊕ m₂**
 
 This leaks information about the plaintexts and can allow the cipher to be broken.
 
@@ -445,25 +413,19 @@ The basic approach is to provide a **MAC**.
 
 **MAC = Message Authentication Code**
 
-Alice and Bob share a key \(K\).
+Alice and Bob share a key `K`.
 
-Alice uses a MAC signing algorithm, denoted by \(S()\):
+Alice uses a MAC signing algorithm, denoted by `S()`:
 
-\[
-tag \leftarrow S(K,m)
-\]
+**tag ← S(K,m)**
 
-Alice sends the message \(m\) along with the tag.
+Alice sends the message `m` along with the tag.
 
-Bob uses a MAC verification algorithm \(V()\).
+Bob uses a MAC verification algorithm `V()`.
 
 Bob verifies:
 
-\[
-V(K,m,tag)
-\]
-
-which returns **yes** or **no**.
+**V(K,m,tag) = yes or no**
 
 ---
 
@@ -481,19 +443,19 @@ A hash table is a data structure used to implement an associative array. It maps
 
 Example:
 
-    John Smith   -> 01
-    Peter Chen   -> 00
-    Gerald Knapp -> 02
+    John Smith   → 01
+    Peter Chen   → 00
+    Gerald Knapp → 02
 
 ---
 
 ## Simple Hash Functions
 
-Practically all algorithms for computing the hash code of a message view the message as a sequence of \(n\)-bit blocks.
+Practically all algorithms for computing the hash code of a message view the message as a sequence of **n-bit blocks**.
 
-The message is processed one block at a time in an iterative fashion to produce an \(n\)-bit hash code.
+The message is processed one block at a time in an iterative fashion to produce an **n-bit hash code**.
 
-Perhaps the simplest hash function consists of starting with the first \(n\)-bit block, XORing it bit-by-bit with the second \(n\)-bit block, XORing the result with the next \(n\)-bit block, and so on.
+Perhaps the simplest hash function consists of starting with the first n-bit block, XORing it bit-by-bit with the second n-bit block, XORing the result with the next n-bit block, and so on.
 
 We will refer to this as the **XOR hash algorithm**.
 
