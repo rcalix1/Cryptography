@@ -309,6 +309,220 @@ C = K ⊕ M
 
 ---
 
+# Stream Ciphers
+
+## Symmetric Encryption
+
+### Stream Ciphers
+
+1. Making the **one-time pad (OTP)** practical.
+
+2. The idea in the **stream cipher** is to replace the totally random key with a **pseudorandom key**.
+
+A **PRG (Pseudorandom Generator)** is a function \(G\) that takes a seed:
+
+\[
+G : \{0,1\}^{s} \rightarrow \{0,1\}^{n}
+\]
+
+where \(s\) is the length of the seed and \(n\) is much larger than \(s\).
+
+The function \(G\) maps the short **seed** string to a much larger key:
+
+\[
+G : \{0,1\}^{s} \rightarrow \{0,1\}^{n}
+\]
+
+where:
+
+\[
+n \gg s
+\]
+
+The generator \(G\) must be **efficiently computable**.
+
+The function \(G\) is deterministic; only the **seed** is random.
+
+---
+
+## How the Pseudorandom Generator Is Used
+
+The "seed," which is short, is the key \(K\).
+
+The generator \(G\) expands the seed:
+
+\[
+K \rightarrow G(K)
+\]
+
+This produces the pseudorandom sequence.
+
+We then XOR the pseudorandom sequence with the message:
+
+\[
+c = m \oplus G(K)
+\]
+
+So the encryption and decryption functions are:
+
+\[
+c = E(K,m) := m \oplus G(K)
+\]
+
+\[
+D(K,c) := c \oplus G(K)
+\]
+
+---
+
+## Stream Cipher Encryption and Decryption
+
+Encryption itself is as simple as it can be. You just XOR the byte from the pseudorandom stream with the plaintext byte to get the encrypted byte.
+
+You generate the same pseudorandom byte stream for decryption. The decryption itself consists of XORing the received byte with the pseudorandom byte.
+
+Encryption and decryption therefore use the same basic operation:
+
+\[
+c = m \oplus G(K)
+\]
+
+\[
+m = c \oplus G(K)
+\]
+
+---
+
+## Security Warning: Reusing the Same Key
+
+WEP has used stream ciphers such as this. The implementation was incorrect and therefore it is insecure.
+
+If you have two ciphers generated with the same key, then the cipher can be broken:
+
+\[
+C_1 = m_1 \oplus PRG(K)
+\]
+
+\[
+C_2 = m_2 \oplus PRG(K)
+\]
+
+XOR the two ciphertexts:
+
+\[
+C_1 \oplus C_2
+\]
+
+Then:
+
+\[
+C_1 \oplus C_2
+=
+(m_1 \oplus PRG(K)) \oplus (m_2 \oplus PRG(K))
+\]
+
+Since:
+
+\[
+PRG(K) \oplus PRG(K) = 0
+\]
+
+we obtain:
+
+\[
+C_1 \oplus C_2 = m_1 \oplus m_2
+\]
+
+This leaks information about the plaintexts and can allow the cipher to be broken.
+
+---
+
+# Message Integrity
+
+Make sure the files/messages have not been changed.
+
+The basic approach is to provide a **MAC**.
+
+**MAC = Message Authentication Code**
+
+Alice and Bob share a key \(K\).
+
+Alice uses a MAC signing algorithm, denoted by \(S()\):
+
+\[
+tag \leftarrow S(K,m)
+\]
+
+Alice sends the message \(m\) along with the tag.
+
+Bob uses a MAC verification algorithm \(V()\).
+
+Bob verifies:
+
+\[
+V(K,m,tag)
+\]
+
+which returns **yes** or **no**.
+
+---
+
+# Cryptographic Hash Functions
+
+A **hash function** is an algorithm that maps data of **variable length** to data of a **fixed length**.
+
+Hash functions are primarily used to generate fixed-length output data that acts as a shortened reference to the original data.
+
+This is useful when the original data is too cumbersome to use in its entirety.
+
+A **hash table** is an example.
+
+A hash table is a data structure used to implement an associative array. It maps **keys to values**.
+
+Example:
+
+    John Smith   -> 01
+    Peter Chen   -> 00
+    Gerald Knapp -> 02
+
+---
+
+## Simple Hash Functions
+
+Practically all algorithms for computing the hash code of a message view the message as a sequence of \(n\)-bit blocks.
+
+The message is processed one block at a time in an iterative fashion to produce an \(n\)-bit hash code.
+
+Perhaps the simplest hash function consists of starting with the first \(n\)-bit block, XORing it bit-by-bit with the second \(n\)-bit block, XORing the result with the next \(n\)-bit block, and so on.
+
+We will refer to this as the **XOR hash algorithm**.
+
+---
+
+# XOR
+
+XOR means **one or the other, but not both**.
+
+| A | B | A XOR B |
+|---|---|---------|
+| 0 | 0 | 0 |
+| 0 | 1 | 1 |
+| 1 | 0 | 1 |
+| 1 | 1 | 0 |
+
+Example:
+
+    Plaintext:   10111101
+    Key:         00110010
+                 --------
+    Ciphertext:  10001111
+
+To decrypt, XOR the ciphertext with the same key:
+
+    Ciphertext:  10001111
+    Key:         00110010
+                 --------
+    Plaintext:   10111101
 
 ---
 
