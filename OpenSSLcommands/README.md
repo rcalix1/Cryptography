@@ -46,7 +46,13 @@ $ cat header body > new.bmp
 ```
 
 
+## Corrupt one bit with "ghex" 
 
+```
+
+>>> ghex
+
+```
 
 
 
