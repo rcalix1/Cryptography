@@ -377,6 +377,8 @@ Decryption:
 
 ## Security Warning: Reusing the Same Key
 
+* Key Stream Re-use Attack
+
 WEP has used stream ciphers such as this. The implementation was incorrect and therefore it is insecure.
 
 If you have two ciphertexts generated with the same key:
