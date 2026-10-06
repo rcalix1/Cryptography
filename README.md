@@ -758,7 +758,176 @@ where:
 
 Because the previous ciphertext is fed back into the encryption process, CFB is called **Cipher Feedback mode**.
 
+---
 
+
+# Block Ciphers
+
+A **block cipher** maps a fixed number of input bits to a fixed number of output bits.
+
+Conceptually:
+
+```text
+ n bits of input  ----->  n bits of output
+```
+
+A plaintext block is processed by a block cipher encryption algorithm using a key:
+
+```text
+                         Key
+                          |
+                          v
+Plaintext Block ---> [ Encryption ] ---> Ciphertext Block
+     n bits                               n bits
+```
+
+The size of the key does not necessarily have to be the same as the block size.
+
+## Classic Examples
+
+Two classic examples of block ciphers are **3DES** and **AES**.
+
+### 3DES
+
+3DES uses a block size of
+
+$$
+n = 64 \text{ bits}
+$$
+
+and can use a key size of
+
+$$
+K = 168 \text{ bits}.
+$$
+
+### AES
+
+AES uses a block size of
+
+$$
+n = 128 \text{ bits}
+$$
+
+and supports key sizes of
+
+$$
+K = 128,\ 192,\ \text{or}\ 256 \text{ bits}.
+$$
+
+---
+
+# How Block Ciphers Work
+
+Block ciphers are typically built using a sequence of **iterations**, often called **rounds**.
+
+## Step 1: Start With a Key
+
+We begin with a key $K$.
+
+For example, AES may use a 128-bit key:
+
+$$
+K = 128 \text{ bits}.
+$$
+
+## Step 2: Generate Round Keys
+
+The original key is expanded into a sequence of keys called **round keys**.
+
+Conceptually:
+
+```text
+                         Key K
+                           |
+          +----------------+----------------+
+          |                |                |
+          v                v                v
+         K1               K2               K3       ...       Kn
+```
+
+This process is commonly called the **key expansion** or **key schedule**.
+
+## Step 3: Apply the Round Function
+
+The message is encrypted through a sequence of rounds.
+
+Let the round function be represented by
+
+$$
+R(K_i,m_i)
+$$
+
+where the inputs are:
+
+- $K_i$ — the current round key
+- $m_i$ — the current state of the message
+
+The output of one round becomes the input to the next round.
+
+Conceptually:
+
+```text
+              K1          K2          K3                    Kn
+               |           |           |                     |
+               v           v           v                     v
+Message ---> [ R ] ---> [ R ] ---> [ R ] ---> ... ---> [ R ] ---> Ciphertext
+               |           |           |
+              m1          m2          m3
+```
+
+Therefore, encryption consists of repeatedly transforming the current state of the message using the appropriate round key.
+
+---
+
+# AES Example
+
+For AES, the message is divided into blocks of **128 bits**.
+
+For example:
+
+```text
+Message:
+
++----------------+----------------+----------------+
+|    Block 1     |    Block 2     |    Block 3     |
+|    128 bits    |    128 bits    |    128 bits    |
++----------------+----------------+----------------+
+```
+
+Each 128-bit block is then processed by AES.
+
+The original key $K$ is expanded into a sequence of round keys:
+
+```text
+                         Key K
+                           |
+       +-------------------+-------------------+
+       |                   |                   |
+       v                   v                   v
+      K1                  K2                  K3       ...       Kn
+       |                   |                   |                  |
+       v                   v                   v                  v
+m --> [R(K1,m)] --> m1 --> [R(K2,m1)] --> m2 --> ... --> [R(Kn,mn)] --> C
+```
+
+Here:
+
+- $m$ is the original 128-bit plaintext block.
+- $m_1,m_2,\ldots$ represent intermediate states of the message.
+- $K_1,K_2,\ldots,K_n$ are the round keys.
+- $R$ represents the round transformation.
+- $C$ is the final 128-bit ciphertext block.
+
+The important idea is that AES does not transform the plaintext into ciphertext in a single operation. Instead, it performs a sequence of transformations using different round keys derived from the original key.
+
+
+
+
+
+
+
+---
 
 
 ---
