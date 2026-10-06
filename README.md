@@ -490,6 +490,136 @@ To decrypt, XOR the ciphertext with the same key:
 
 ---
 
+
+
+
+# Block Ciphers
+
+Block ciphers encrypt data by dividing a message into blocks of a fixed size. Each plaintext block is transformed into a corresponding ciphertext block.
+
+## Procedure for Block Ciphers
+
+When a block cipher is used to encrypt a long message, the message is first divided into blocks of the correct length.
+
+For example:
+
+```text
+Plaintext:
+
+[ Block 1 ][ Block 2 ][ Block 3 ] ... [ Block n ]
+```
+
+If the last block is only partially filled, padding is added so that it has the required block length.
+
+The block cipher then uses a chosen mode of operation to determine how the individual blocks are encrypted.
+
+## Modes of Operation
+
+There are different ways of breaking up and encrypting a message. These are called **modes of operation**.
+
+One example is **Electronic Codebook (ECB)**.
+
+## Electronic Codebook (ECB)
+
+In Electronic Codebook mode, each plaintext block is encrypted independently.
+
+```text
+Plaintext:
+
+[   ][   ][ m1 ][   ][ m2 ]
+              |           |
+              v           v
+Ciphertext:
+
+[   ][   ][ c1 ][   ][ c2 ]
+```
+
+An important property of ECB is:
+
+$$
+m_1 = m_2 \quad \Rightarrow \quad c_1 = c_2
+$$
+
+If two plaintext blocks contain the same data, they produce the same ciphertext.
+
+For example:
+
+```text
+Plaintext:
+
+[    ][ READ ][    ][    ][ READ ][    ]
+
+Ciphertext:
+
+[    ][ #XR37 ][    ][    ][ #XR37 ][    ]
+```
+
+Since
+
+$$
+m_1 = m_2
+$$
+
+then
+
+$$
+c_1 = c_2
+$$
+
+This means that an attacker may be able to learn something about the original message even without decrypting the ciphertext.
+
+## Patterns in ECB
+
+Suppose the plaintext represents an image containing repeated blocks.
+
+```text
++---+---+---+---+---+
+|   |   |   |   |   |
++---+---+---+---+---+
+|   | X | X | X |   |
++---+---+---+---+---+
+|   |   |   | X |   |
++---+---+---+---+---+
+|   |   |   | X |   |
++---+---+---+---+---+
+|   |   |   | X |   |
++---+---+---+---+---+
+```
+
+After ECB encryption, the values contained in the blocks change, but identical plaintext blocks still produce identical ciphertext blocks.
+
+```text
++---+---+---+---+---+
+|   |   |   |   |   |
++---+---+---+---+---+
+|   |111|111|111|   |
++---+---+---+---+---+
+|   |   |   |111|   |
++---+---+---+---+---+
+|   |   |   |111|   |
++---+---+---+---+---+
+|   |   |   |111|   |
++---+---+---+---+---+
+```
+
+Therefore, the **pattern may persist** in the encrypted data.
+
+This is an important weakness of Electronic Codebook mode.
+
+## Accessibility
+
+The block cipher diagrams are represented using text so that their meaning does not depend on images, color, or visual appearance. The essential information represented by each diagram is also described in the surrounding text.
+
+
+
+
+
+
+
+---
+
+---
+
 ## OpenSSL
 
 * openssl lets you generate RSA keys as short as 31 bits
