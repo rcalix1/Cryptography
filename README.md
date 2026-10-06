@@ -1098,6 +1098,182 @@ This is an important feature of the Feistel network: **the round function itself
 The DES and Feistel network diagrams are represented using text and are also described using equations and surrounding text. The material therefore does not depend on images, color, or visual position alone to communicate the encryption process.
 
 
+---
+
+
+
+
+# DES Implementation
+
+DES uses a **64-bit input block** and a **16-round Feistel network**.
+
+The 64-bit input is divided into two 32-bit halves:
+
+```text
+             64-bit Input
+                  |
+          +-------+-------+
+          |               |
+       32 bits          32 bits
+          |               |
+          +-------+-------+
+                  |
+                  v
+        [ 16-Round Feistel Network ]
+                  |
+                  v
+             64-bit Output
+```
+
+For DES, the round functions can be represented as
+
+$$
+f_1,\ldots,f_{16}.
+$$
+
+Each round operates on the two 32-bit halves of the current state.
+
+---
+
+# DES Round Function
+
+A major component of DES is the round function $f$.
+
+The round function receives:
+
+- a **32-bit** input
+- a **48-bit** round key
+
+and produces a **32-bit** output.
+
+Conceptually:
+
+```text
+32-bit input
+     |
+     v
+[ Expansion ]
+     |
+     v
+48 bits ----------------+
+                        |
+                        v
+                     [ XOR ] <----- 48-bit Round Key
+                        |
+                        v
+                    48 bits
+                        |
+                        v
+                  [ S-Boxes ]
+                        |
+                        v
+                    32 bits
+```
+
+## Expansion
+
+The 32-bit input is first expanded to 48 bits.
+
+$$
+32\text{ bits} \rightarrow 48\text{ bits}
+$$
+
+This expansion is performed by rearranging and repeating some of the input bits.
+
+The resulting 48-bit value is then XORed with the 48-bit round key:
+
+$$
+E(R) \oplus K_i
+$$
+
+where:
+
+- $R$ is the 32-bit input to the round function
+- $E(R)$ is the expanded 48-bit value
+- $K_i$ is the 48-bit round key for round $i$
+
+---
+
+# S-Boxes
+
+The resulting 48 bits are divided into eight groups of 6 bits.
+
+```text
+48 bits
+
++------+------+------+------+------+------+------+------+
+| 6 bit| 6 bit| 6 bit| 6 bit| 6 bit| 6 bit| 6 bit| 6 bit|
++------+------+------+------+------+------+------+------+
+   |      |      |      |      |      |      |      |
+   v      v      v      v      v      v      v      v
+  [S1]   [S2]   [S3]   [S4]   [S5]   [S6]   [S7]   [S8]
+   |      |      |      |      |      |      |      |
+ 4 bits 4 bits 4 bits 4 bits 4 bits 4 bits 4 bits 4 bits
+   |      |      |      |      |      |      |      |
+   +------+------+------+------+------+------+------+
+                         |
+                         v
+                      32 bits
+```
+
+Each **S-box** maps 6 bits to 4 bits:
+
+$$
+S_i:\{0,1\}^6 \rightarrow \{0,1\}^4.
+$$
+
+The eight S-boxes therefore transform
+
+$$
+48\text{ bits} \rightarrow 32\text{ bits}.
+$$
+
+The S-box functions are implemented using lookup tables.
+
+## S-Box Lookup Example
+
+For a 6-bit input, the **outer two bits** determine the row of the S-box table, while the **middle four bits** determine the column.
+
+For example, consider:
+
+```text
+0 1101 1
+| ---- |
+|   |  |
++---|--+----> outer bits
+    |
+    +-------> middle four bits
+```
+
+The outer bits are
+
+```text
+01
+```
+
+and the middle four bits are
+
+```text
+1101
+```
+
+These values identify a location in the S-box lookup table.
+
+For example, if that location contains
+
+```text
+1001
+```
+
+then the mapping is
+
+$$
+011011 \rightarrow 1001.
+$$
+
+Thus, a 6-bit input to an S-box produces a 4-bit output.
+
+The outputs from all eight S-boxes are combined to produce the 32-bit result used by the DES round function.
 
 
 
@@ -1106,6 +1282,9 @@ The DES and Feistel network diagrams are represented using text and are also des
 
 
 
+
+
+---
 
 
 ---
