@@ -1294,9 +1294,7 @@ $$
 For a plaintext message $m$, 3DES can be represented as
 
 $$
-3E((K_1,K_2,K_3),m)
-=
-E(K_1,D(K_2,E(K_3,m))).
+3E((K_1,K_2,K_3),m) = E(K_1,D(K_2,E(K_3,m)))
 $$
 
 In other words:
