@@ -612,6 +612,151 @@ The block cipher diagrams are represented using text so that their meaning does 
 
 
 
+---
+
+
+
+
+## Cipher Block Chaining (CBC)
+
+In order to encrypt messages that are longer than the block size, different modes of operation can be used.
+
+One important mode is **Cipher Block Chaining (CBC)**.
+
+In CBC, the plaintext is divided into blocks. Each plaintext block is XORed with the ciphertext from the previous block before being encrypted.
+
+The first plaintext block does not have a previous ciphertext block. Therefore, an **Initialization Vector (IV)** is used.
+
+Conceptually:
+
+```text
+                 Plaintext 1
+                     |
+IV ---------------- XOR
+                     |
+                     v
+Key ----------> [ Block Cipher ]
+                     |
+                     v
+               Ciphertext 1
+                     |
+                     +--------------------+
+                                          |
+                                    Plaintext 2
+                                          |
+                                         XOR
+                                          |
+                                          v
+Key ------------------------------> [ Block Cipher ]
+                                          |
+                                          v
+                                    Ciphertext 2
+                                          |
+                                          +--------------------+
+                                                               |
+                                                         Plaintext 3
+                                                               |
+                                                              XOR
+                                                               |
+                                                               v
+Key ---------------------------------------------------> [ Block Cipher ]
+                                                               |
+                                                               v
+                                                         Ciphertext 3
+```
+
+The CBC encryption process can be represented mathematically as
+
+$$
+C_1 = E_K(P_1 \oplus IV)
+$$
+
+and for the remaining blocks,
+
+$$
+C_i = E_K(P_i \oplus C_{i-1})
+$$
+
+where:
+
+- $P_i$ is the current plaintext block.
+- $C_i$ is the current ciphertext block.
+- $C_{i-1}$ is the previous ciphertext block.
+- $E_K$ represents encryption using key $K$.
+- $\oplus$ represents the XOR operation.
+- $IV$ is the Initialization Vector.
+
+The use of the IV and the previous ciphertext block helps prevent identical plaintext blocks from producing identical ciphertext blocks.
+
+---
+
+## Cipher Feedback (CFB) Mode
+
+Another mode of operation is **Cipher Feedback (CFB)** mode.
+
+CFB is similar to CBC, but it uses a block cipher to create a **self-synchronizing stream cipher**.
+
+Instead of XORing the plaintext with the previous ciphertext before block encryption, the previous ciphertext is encrypted first. The result is then XORed with the plaintext.
+
+For the first block, the Initialization Vector is encrypted:
+
+```text
+        Initialization Vector
+                 |
+                 v
+Key ------> [ Block Cipher ]
+                 |
+                 v
+Plaintext 1 ---> XOR
+                 |
+                 v
+            Ciphertext 1
+                 |
+                 +-------------------+
+                                     |
+                                     v
+Key -------------------------> [ Block Cipher ]
+                                     |
+                                     v
+Plaintext 2 -----------------------> XOR
+                                     |
+                                     v
+                                Ciphertext 2
+                                     |
+                                     +-------------------+
+                                                         |
+                                                         v
+Key --------------------------------------------> [ Block Cipher ]
+                                                         |
+                                                         v
+Plaintext 3 -------------------------------------------> XOR
+                                                         |
+                                                         v
+                                                    Ciphertext 3
+```
+
+The CFB encryption process can be represented as
+
+$$
+C_1 = P_1 \oplus E_K(IV)
+$$
+
+and for subsequent blocks,
+
+$$
+C_i = P_i \oplus E_K(C_{i-1})
+$$
+
+where:
+
+- $P_i$ is the plaintext block.
+- $C_i$ is the ciphertext block.
+- $C_{i-1}$ is the previous ciphertext block.
+- $E_K$ represents encryption using key $K$.
+- $\oplus$ represents the XOR operation.
+- $IV$ is the Initialization Vector.
+
+Because the previous ciphertext is fed back into the encryption process, CFB is called **Cipher Feedback mode**.
 
 
 
