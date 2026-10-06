@@ -1275,7 +1275,282 @@ Thus, a 6-bit input to an S-box produces a 4-bit output.
 
 The outputs from all eight S-boxes are combined to produce the 32-bit result used by the DES round function.
 
+---
 
+
+
+# Triple DES (3DES)
+
+The relatively small key size of DES eventually made exhaustive key searches practical. One approach to extending the useful life of DES was to increase the effective key size by applying DES multiple times.
+
+This approach is called **Triple DES (3DES)**.
+
+3DES uses three DES operations with three keys:
+
+$$
+K_1,\ K_2,\ K_3
+$$
+
+For a plaintext message $m$, 3DES can be represented as
+
+$$
+3E((K_1,K_2,K_3),m)
+=
+E(K_1,D(K_2,E(K_3,m))).
+$$
+
+In other words:
+
+```text
+                            K3             K2             K1
+                             |              |              |
+                             v              v              v
+Plaintext m ------------> [ E ] --------> [ D ] --------> [ E ] --------> Ciphertext
+```
+
+where:
+
+- $E$ represents DES encryption.
+- $D$ represents DES decryption.
+- $K_1$, $K_2$, and $K_3$ are the DES keys.
+
+The use of multiple DES operations increases the effective key size, but it also makes the process significantly slower than a single DES operation.
+
+---
+
+# Advanced Encryption Standard (AES)
+
+**AES** stands for **Advanced Encryption Standard**.
+
+DES eventually became too vulnerable to exhaustive key searches, creating the need for a new encryption standard.
+
+AES was selected through a competition organized by NIST. The winning algorithm was **Rijndael**, designed by Joan Daemen and Vincent Rijmen.
+
+AES uses a fixed block size of
+
+$$
+128\text{ bits}.
+$$
+
+AES supports three key sizes:
+
+$$
+128,\ 192,\ \text{and}\ 256\text{ bits}.
+$$
+
+A larger key provides a larger possible key space.
+
+---
+
+# Basic AES Structure
+
+AES operates on a 128-bit block of data.
+
+The input is represented as a matrix of bytes called the **state**.
+
+Encryption consists of a sequence of rounds. The exact number of rounds depends on the key size:
+
+- 128-bit key: 10 rounds
+- 192-bit key: 12 rounds
+- 256-bit key: 14 rounds
+
+The original encryption key is expanded into a sequence of **round keys**.
+
+Conceptually:
+
+```text
+128-bit Plaintext
+       |
+       v
++----------------+
+|      State     |
++----------------+
+       |
+       | XOR Round Key
+       v
++----------------+
+|    AES Round   |
++----------------+
+       |
+       | XOR Round Key
+       v
++----------------+
+|    AES Round   |
++----------------+
+       |
+      ...
+       |
+       v
++----------------+
+|  Final Round   |
++----------------+
+       |
+       v
+128-bit Ciphertext
+```
+
+Each round changes the state so that the bits of the original plaintext become increasingly mixed throughout the block.
+
+Two important ideas used throughout AES are:
+
+1. **Substitution**
+2. **Permutation**
+
+These operations are repeatedly applied across the rounds.
+
+---
+
+# AES Round Operations
+
+The main AES round operations are:
+
+1. **SubBytes** — bytes are replaced using a substitution table.
+2. **ShiftRows** — rows of the state are shifted.
+3. **MixColumns** — values within each column are mathematically mixed.
+4. **AddRoundKey** — the state is XORed with the current round key.
+
+Conceptually:
+
+```text
+State
+  |
+  v
+[ SubBytes ]
+  |
+  v
+[ ShiftRows ]
+  |
+  v
+[ MixColumns ]
+  |
+  v
+[ AddRoundKey ] <----- Round Key
+  |
+  v
+New State
+```
+
+The process is repeated over multiple rounds.
+
+The final round is slightly different because it does not perform the MixColumns operation.
+
+The repeated substitution and permutation operations cause changes in the input to spread throughout the encrypted block.
+
+---
+
+# Substitution in AES
+
+An important component of AES is the **S-box**, or substitution box.
+
+The S-box performs a byte substitution:
+
+$$
+\{0,1\}^8 \rightarrow \{0,1\}^8.
+$$
+
+In other words, each 8-bit input value is mapped to another 8-bit value using the AES substitution table.
+
+Conceptually:
+
+```text
+Input Byte ---> [ S-Box ] ---> Output Byte
+   8 bits                       8 bits
+```
+
+This substitution is performed on every byte of the AES state.
+
+The substitution operation, together with the permutation and mixing operations in later steps, helps ensure that changes to the input spread throughout the ciphertext.
+
+
+
+# Toy AES Cipher: SubBytes and ShiftRows Explained
+
+This document explains the **core ideas of AES encryption** as implemented in a simplified (toy) Python version using 8-byte blocks. The main focus is on the two critical AES transformations:
+
+* `SubBytes` (non-linear substitution)
+* `ShiftRows` (byte permutation)
+
+---
+
+## 1. SubBytes (S-Box Substitution)
+
+Each byte of the block is replaced using a substitution box (S-Box), which maps values in a non-linear way.
+
+### Toy S-Box Used:
+
+```text
+Index → SBOX value
+  0   →   6
+  1   →   4
+  2   →  12
+  3   →   5
+  4   →   0
+  5   →   7
+  6   →   2
+  7   →  14
+  8   →   1
+  9   →  15
+ 10   →   3
+ 11   →  13
+ 12   →   8
+ 13   →  10
+ 14   →   9
+ 15   →  11
+```
+
+### Example:
+
+```python
+input_block = [0, 1, 2, 3, 4, 5, 6, 7]
+sub_bytes(input_block) → [6, 4, 12, 5, 0, 7, 2, 14]
+```
+
+> Each number is replaced using the S-Box based on its value.
+
+---
+
+## 2. ShiftRows (Byte Permutation)
+
+In real AES, this step shifts rows of the state matrix. In this toy version, we simulate it with a hardcoded reordering.
+
+### Input After SubBytes:
+
+```python
+block = [6, 4, 12, 5, 0, 7, 2, 14]
+```
+
+### Toy ShiftRows Implementation:
+
+```python
+shifted = [
+    block[0], block[5], block[2], block[7],
+    block[4], block[1], block[6], block[3]
+]
+```
+
+### Result:
+
+```python
+shifted = [6, 7, 12, 14, 0, 4, 2, 5]
+```
+
+> This shuffles the bytes to simulate the AES row shifts, increasing diffusion.
+
+---
+
+## Summary Table
+
+| Step          | What It Does      | Example Input         | Example Output        |
+| ------------- | ----------------- | --------------------- | --------------------- |
+| **SubBytes**  | Replace via S-Box | `[0,1,2,3,...]`       | `[6,4,12,5,...]`      |
+| **ShiftRows** | Shuffle positions | `[6,4,12,5,0,7,2,14]` | `[6,7,12,14,0,4,2,5]` |
+
+These steps give AES its strength:
+
+* **SubBytes** → confusion (non-linearity)
+* **ShiftRows** → diffusion (spreading input influence)
+
+---
 
 
 
