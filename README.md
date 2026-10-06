@@ -921,10 +921,194 @@ Here:
 
 The important idea is that AES does not transform the plaintext into ciphertext in a single operation. Instead, it performs a sequence of transformations using different round keys derived from the original key.
 
+---
+
+
+
+# Data Encryption Standard (DES)
+
+**DES** stands for **Data Encryption Standard**.
+
+DES is an important historical example of a block cipher.
+
+The basic structure of a block cipher can be represented as:
+
+```text
+                         Key
+                          |
+                          v
+Plaintext Block ---> [ Encryption ] ---> Ciphertext Block
+     n bits                               n bits
+```
+
+The plaintext block and ciphertext block contain the same number of bits.
+
+DES was developed in the 1970s based on work at IBM. In 1997, DES was broken through exhaustive key search. DES was eventually replaced as a standard by AES.
+
+---
+
+# DES and Feistel Networks
+
+The basic idea behind DES is to build a **Feistel Network**.
+
+Suppose we have a collection of round functions
+
+$$
+f_1,f_2,\ldots,f_d
+$$
+
+that map bit strings to bit strings.
+
+The input block is divided into two parts:
+
+$$
+L_0
+$$
+
+and
+
+$$
+R_0
+$$
+
+representing the left and right halves of the input.
+
+Conceptually, the Feistel network consists of a sequence of rounds:
+
+```text
+             Round 1           Round 2                    Round d
+
+ L0 -----------+------------------+--------------------------+
+               |                  |
+               |                 ...
+               v
+              [f1]
+               |
+               v
+ R0 ---------> XOR
+               |
+               +-------> R1
+
+ R0 -------------------> L1
+```
+
+The process is repeated for multiple rounds.
+
+For each round $i=1,\ldots,d$:
+
+$$
+L_i = R_{i-1}
+$$
+
+and
+
+$$
+R_i = f_i(R_{i-1}) \oplus L_{i-1}
+$$
+
+where $\oplus$ represents the XOR operation.
+
+Thus, the right side from the previous round becomes the new left side:
+
+$$
+L_i = R_{i-1}
+$$
+
+while the new right side is produced by applying the round function to the previous right side and XORing the result with the previous left side:
+
+$$
+R_i = f_i(R_{i-1}) \oplus L_{i-1}.
+$$
+
+Conceptually:
+
+```text
+             Ri-1
+              |
+       +------+------+
+       |             |
+       |             v
+       |          [ fi ]
+       |             |
+       |             v
+       |            XOR <----- Li-1
+       |             |
+       |             v
+       |             Ri
+       |
+       +------------------------> Li
+```
+
+The important relationships are therefore:
+
+$$
+L_i = R_{i-1}
+$$
+
+$$
+R_i = f_i(R_{i-1}) \oplus L_{i-1}
+$$
+
+---
+
+## Inverting a Feistel Round
+
+An important property of the Feistel structure is that the process can be inverted.
+
+From
+
+$$
+L_{i+1}=R_i
+$$
+
+we immediately obtain
+
+$$
+R_i=L_{i+1}.
+$$
+
+The forward equation is
+
+$$
+R_{i+1}=f_{i+1}(R_i)\oplus L_i.
+$$
+
+Therefore, we can recover the previous left side:
+
+$$
+L_i=f_{i+1}(L_{i+1})\oplus R_{i+1}.
+$$
+
+So the inverse relationships are:
+
+$$
+R_i=L_{i+1}
+$$
+
+and
+
+$$
+L_i=f_{i+1}(L_{i+1})\oplus R_{i+1}.
+$$
+
+This is an important feature of the Feistel network: **the round function itself does not need to be invertible for the overall Feistel structure to be invertible.**
+
+## Accessibility
+
+The DES and Feistel network diagrams are represented using text and are also described using equations and surrounding text. The material therefore does not depend on images, color, or visual position alone to communicate the encryption process.
 
 
 
 
+
+
+
+
+
+
+
+
+---
 
 
 ---
