@@ -1,5 +1,285 @@
 ## Block Ciphers
 
+* link
+
+## Feistel DES code
+
+```
+
+from os import urandom
+
+import pickle
+
+
+#############################
+## generating the key
+
+def genkey(length):
+    return bytearray(urandom(length))
+
+
+#############################
+
+def Encrypt(plain, key):
+    
+    return bytearray([ord(plain[i]) ^ key[i] for i in range(len(plain))])
+
+
+#############################
+
+##                 4    4   8
+def feistel_round(L0, R0, iv):
+
+    F_out = encrypt2(R0, iv[:4])
+    
+    ### L = L0 ^ F_out
+    L = encrypt2(L0, F_out)
+    
+    return R0, L
+
+
+#############################
+## FIX - reverse of feistel_round()
+
+def feistel_round_reverse(L1, R1, iv):
+
+    R0 = L1
+
+    F_out = encrypt2(R0, iv[:4])
+
+    L0 = encrypt2(R1, F_out)
+
+    return L0, R0
+
+
+#############################
+
+
+def encrypt1(plain_block, iv):
+
+    temp_block = Encrypt(plain_block, iv)
+
+    ## print(temp_block)
+    ##############################
+    ## DES
+
+    L = temp_block[:4]
+    R = temp_block[4:]
+
+    for _ in range(3):     ## 3 feistel rounds
+
+        L0 = L
+        R0 = R
+
+        ## FIX - feistel returns new L, new R
+        L_new, R_new = feistel_round(L0, R0, iv)
+
+        L = L_new
+        R = R_new
+
+    ##############################
+    return L + R
+
+
+##################################
+
+def decrypt2(temp, iv):
+
+    ## FIX - encryption returned L + R
+    L0, R0 = temp[:4], temp[4:]
+
+    for _ in range(3):  ## 3 feistel rounds in reverse
+
+        print("round")
+
+        L0, R0 = feistel_round_reverse(L0, R0, iv)
+
+    print("end")
+
+    concat_feistel_final_block = L0 + R0
+
+    ## FIX - undo initial XOR with iv
+    return decrypt_to_plain_letter(concat_feistel_final_block, iv)
+
+
+##################################
+
+def encrypt2(temp_cipher_block, key):
+
+    print(temp_cipher_block)
+    print(key)
+
+    return bytearray(
+        [temp_cipher_block[i] ^ key[i]
+         for i in range(len(temp_cipher_block))]
+    )
+
+
+#################################
+
+def decrypt_to_plain_letter(cipher_block, iv):
+
+    return [
+        chr(cipher_block[i] ^ iv[i])
+        for i in range(len(cipher_block))
+    ]
+
+
+#################################
+
+
+def decrypt1(temp_cipher, iv):
+
+    return bytearray(
+        [temp_cipher[i] ^ iv[i]
+         for i in range(len(temp_cipher))]
+    )
+
+
+#################################
+
+
+def Decrypt(cipher, key):
+
+    return [
+        chr(cipher[i] ^ key[i])
+        for i in range(len(cipher))
+    ]
+
+
+###############################
+
+
+def encrypt_message(blockList, key, iv, len_of_blocks):
+
+    list_of_ciphers = []
+
+    for i in range(len(blockList)):
+
+        cipher1 = encrypt1(blockList[i], iv)
+
+        cipher2 = encrypt2(cipher1, key)
+
+        list_of_ciphers.append(cipher2)
+
+        iv = cipher2
+
+    return list_of_ciphers
+
+
+###############################
+
+def decrypt_cipher(list_cipher, key, iv):
+
+    list_of_decrypted_blocks = []
+
+    ## FIX - decrypt forward so chaining is simple
+    for i in range(len(list_cipher)):
+
+        if i == 0:
+            current_iv = iv
+        else:
+            current_iv = list_cipher[i - 1]
+
+        ## undo encryption with key
+        temp = decrypt1(list_cipher[i], key)
+
+        ## reverse Feistel and undo IV
+        plain = decrypt2(temp, current_iv)
+
+        list_of_decrypted_blocks.append(plain)
+
+    return list_of_decrypted_blocks
+
+
+###############################
+
+
+def CreateBlocks(plain, block_size):
+
+    temp_list_blocks = []
+
+    for i in range(0, len(plain), block_size):
+
+        block = plain[i:i + block_size]
+
+        if len(block) == block_size:
+
+            temp_list_blocks.append(block)
+
+        else:
+
+            c = block_size - len(block)
+
+            for i in range(c):
+                block = block + " "
+
+            temp_list_blocks.append(block)
+
+    return temp_list_blocks
+
+
+###############################
+## Main()
+
+
+plain_text = "this is a top secret 1234567890 AABBCCDDEEFFGGHHIIJJKKLLMMNNOOPPQQRRSSTTUUVVWWXXYYZZ"
+
+print(plain_text)
+
+length = 8
+
+print(len(plain_text))
+
+
+#################################
+
+
+list_of_blocks = CreateBlocks(plain_text, length)
+
+print(list_of_blocks)
+
+
+#################################
+
+key = genkey(length)
+iv = genkey(length)
+
+print(key)
+print(iv)
+
+
+################################
+
+cipher_list = encrypt_message(list_of_blocks, key, iv, length)
+
+print(cipher_list)
+
+
+################################
+## Decrypt
+
+
+after_pickle_decrypted_plain = decrypt_cipher(cipher_list, key, iv)
+
+print(after_pickle_decrypted_plain)
+
+
+print(
+    ''.join(
+        [''.join(block) for block in after_pickle_decrypted_plain]
+    )
+)
+
+
+print("DONE")
+
+
+
+
+
+```
+
 # SSL/TLS, Encryption, and XOR: Lecture Notes
 
 ## 🔐 SSL/TLS (Secure Sockets Layer / Transport Layer Security)
