@@ -238,7 +238,147 @@ def int2Text(number, size):
 
 ```
 
+even more detailed 
 
+
+```
+
+
+def encrypt(ptext, pk, mod):
+    """Encrypt message with RSA public key"""
+
+    # EXAMPLE: Encrypt the word "CAT"
+    #
+    # Public key: e = 17, n = 3233
+    #
+    # RSA encryption:
+    #     ciphertext = plaintext^e mod n
+    #
+    # The plaintext must first be converted into integers.
+    # Each integer must be smaller than n = 3233.
+    #
+    # ASCII representation:
+    #
+    # Character     Decimal       Binary
+    #     C            67         01000011
+    #     A            65         01000001
+    #     T            84         01010100
+    #
+    # We cannot encrypt "CAT" as one integer because:
+    #
+    # "CAT" = 01000011 01000001 01010100
+    #       = 4407636, which is larger than n = 3233.
+    #
+    # Therefore, we divide the message into smaller blocks.
+
+    size = modSize(mod)
+
+    # n = 3233 = 0x0CA1 (hexadecimal)
+    #
+    # One hexadecimal digit represents 4 bits.
+    # Two hexadecimal digits represent one byte.
+    #
+    # 0C A1 = 2 bytes, so size = 2.
+    #
+    # We reserve one byte, leaving size-1 = 1 byte
+    # for each plaintext block.
+
+    output = []
+
+    # output will contain the encrypted bytes.
+    # Initially, the list is empty.
+
+    while ptext:
+
+        # FIRST ITERATION:
+        # ptext = "CAT"
+        # len(ptext) = 3
+        # size - 1 = 1
+        #
+        # min(3,1) = 1
+        #
+        # Therefore, we encrypt only "C".
+        nbytes = min(len(ptext), size - 1)
+
+        # Extract the first nbytes characters.
+        #
+        # ptext[:1] = "C"
+        #
+        # text2Int("C") = 67
+        #
+        # Therefore, aux1 = 67.
+        aux1 = text2Int(ptext[:nbytes])
+
+        # RSA requires m < n.
+        #
+        # 67 < 3233, so encryption can proceed.
+        assert aux1 < mod
+
+        # Encrypt using modular exponentiation:
+        #
+        #     c = m^e mod n
+        #
+        # FIRST BLOCK ("C"):
+        #     c = 67^17 mod 3233 = 641
+        #
+        # SECOND BLOCK ("A"):
+        #     c = 65^17 mod 3233 = 2790
+        #
+        # THIRD BLOCK ("T"):
+        #     c = 84^17 mod 3233 = 2159
+        #
+        # The plaintext integers 67, 65, 84
+        # become ciphertext integers 641, 2790, 2159.
+        aux2 = pow(aux1, pk, mod)
+
+        # Convert each encrypted integer into bytes.
+        #
+        # Why? We want to store the encrypted message
+        # as a sequence of bytes, not one enormous integer.
+        #
+        # size + 2 = 4 bytes per ciphertext block.
+        #
+        # For "C":
+        #     641 decimal = 0x00000281
+        #     Bytes = [0, 0, 2, 129]
+        #
+        # For "A":
+        #     2790 decimal = 0x00000AE6
+        #     Bytes = [0, 0, 10, 230]
+        #
+        # For "T":
+        #     2159 decimal = 0x0000086F
+        #     Bytes = [0, 0, 8, 111]
+        #
+        # output += appends these bytes to the list.
+        #
+        # After all three iterations:
+        #
+        # output = [
+        #     0, 0, 2, 129,
+        #     0, 0, 10, 230,
+        #     0, 0, 8, 111
+        # ]
+        #
+        # The fixed block length lets the decrypt()
+        # function separate the ciphertext into blocks.
+        output += int2List(aux2, size + 2)
+
+        # Remove the plaintext characters already encrypted.
+        #
+        # Iteration 1: "CAT" -> "AT"
+        # Iteration 2: "AT"  -> "T"
+        # Iteration 3: "T"   -> ""
+        #
+        # When ptext is empty, the while loop stops.
+        ptext = ptext[nbytes:]
+
+    # Return the complete encrypted byte sequence.
+    return output
+
+
+
+```
 
 
 
