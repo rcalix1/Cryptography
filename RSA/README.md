@@ -97,6 +97,77 @@ def xgcd(x, y):
 
 ```
 
+---
+
+## Text to Int
+
+
+```
+
+
+
+def text2Int(text):
+    """Convert a text string into an integer"""
+
+    # Example: text = "AB"
+    #
+    # ord() converts each character to its ASCII/Unicode number:
+    # A = 65, B = 66
+    #
+    # map(ord, text) produces [65, 66]
+    #
+    # x << 8 shifts x left by 8 bits (equivalent to x * 256).
+    # Each character occupies one byte (8 bits) in this code.
+    #
+    # reduce() combines the character values into one integer:
+    # Start with 65
+    # (65 << 8) + 66 = 65*256 + 66 = 16706
+    #
+    # Therefore, "AB" becomes the integer 16706.
+
+    return reduce(lambda x, y : (x << 8) + y, map(ord, text))
+
+
+def int2Text(number, size):
+    """Convert an integer into a text string"""
+
+    # Example: number = 16706, size = 2 bytes
+    #
+    # Reverse the conversion: 16706 -> "AB"
+    #
+    # size << 3 means size * 8 (convert bytes to bits).
+    # For size=2, this gives 16 bits.
+    #
+    # range(0, 16, 8) produces [0, 8].
+    # reversed() produces [8, 0] to extract the first byte first.
+    #
+    # number >> j shifts right by j bits.
+    # & 0xff keeps only the last 8 bits (0xff = 255).
+    #
+    # First byte:  (16706 >> 8) & 255 = 65 -> chr(65) = "A"
+    # Second byte: (16706 >> 0) & 255 = 66 -> chr(66) = "B"
+    #
+    # join() combines the characters into "AB".
+    # lstrip("\x00") removes leading zero bytes, if present.
+
+    text = "".join([chr((number >> j) & 0xff)
+                    for j in reversed(range(0, size << 3, 8))])
+    return text.lstrip("\x00")
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
 
 
 
