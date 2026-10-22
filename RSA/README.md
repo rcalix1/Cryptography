@@ -3,6 +3,7 @@
 For asymmetric encryption
 
 * https://rcalix1.github.io/Cryptography/RSA/350RSA_steps.pdf
+* https://rcalix1.github.io/Cryptography/RSA/RSA_gcd_EEA_details.pdf
 
 ## Break RSA
 
