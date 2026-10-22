@@ -160,7 +160,83 @@ def int2Text(number, size):
 ```
 
 
+more detailed 
 
+
+```
+
+
+
+def text2Int(text):
+    """Convert a text string into an integer"""
+
+    # Example: text = "CAT"
+    #
+    # Step 1: Convert characters to ASCII numbers:
+    #    C = 67, A = 65, T = 84
+    #
+    # Step 2: Represent each character as 8 bits:
+    #    C = 01000011
+    #    A = 01000001
+    #    T = 01010100
+    #
+    # Step 3: Combine the three bytes into one binary number:
+    #    01000011 01000001 01010100
+    #
+    # Step 4: Convert this binary number to decimal:
+    #    67*256^2 + 65*256 + 84 = 4407636
+    #
+    # The << 8 operation shifts bits left by one byte:
+    #    67 << 8 = 17152
+    #    17152 + 65 = 17217
+    #    17217 << 8 = 4407552
+    #    4407552 + 84 = 4407636
+    #
+    # reduce() repeats this process for every character.
+    # Result: "CAT" -> 4407636
+
+    return reduce(lambda x, y: (x << 8) + y, map(ord, text))
+
+
+def int2Text(number, size):
+    """Convert an integer into a text string"""
+
+    # Example: number = 4407636, size = 3
+    #
+    # Step 1: Express the integer as 3 bytes:
+    #    01000011 01000001 01010100
+    #       67       65       84
+    #
+    # Step 2: Extract one byte at a time, starting from the left.
+    #
+    #    number >> 16  = 67
+    #    number >> 8   = 17217
+    #    number >> 0   = 4407636
+    #
+    # Step 3: Apply & 0xff (binary 11111111).
+    # This keeps only the rightmost 8 bits:
+    #
+    #    (4407636 >> 16) & 255 = 67
+    #    (4407636 >> 8)  & 255 = 65
+    #    (4407636 >> 0)  & 255 = 84
+    #
+    # Step 4: Convert ASCII numbers back into characters:
+    #    chr(67) = "C"
+    #    chr(65) = "A"
+    #    chr(84) = "T"
+    #
+    # Step 5: join() combines them into "CAT".
+    # lstrip("\x00") removes any leading zero bytes.
+    #
+    # Result: 4407636 -> "CAT"
+
+    text = "".join([chr((number >> j) & 0xff)
+                    for j in reversed(range(0, size << 3, 8))])
+    return text.lstrip("\x00")
+
+
+
+```
 
 
 
