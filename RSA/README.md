@@ -796,3 +796,104 @@ for a in range(1, p):
 ---
 
 
+
+## Step 5 — Euclidean Algorithm (GCD)
+
+The **Greatest Common Divisor (GCD)** is the largest positive integer that divides two numbers exactly.
+
+For example, consider 48 and 18.
+
+- Divisors of 48: 1, 2, 3, 4, 6, 8, 12, 16, 24, 48
+- Divisors of 18: 1, 2, 3, 6, 9, 18
+
+The largest common divisor is **6**.
+
+### Euclidean Algorithm
+
+Instead of finding every divisor, we repeatedly calculate remainders:
+
+$$
+48 = 2(18)+12
+$$
+
+$$
+18 = 1(12)+6
+$$
+
+$$
+12 = 2(6)+0
+$$
+
+When the remainder becomes zero, the last nonzero remainder is the GCD.
+
+Therefore:
+
+$$
+\gcd(48,18)=6
+$$
+
+**Why this matters in cryptography:** RSA requires choosing a public exponent $e$ that has no common divisor with $\phi(n)$ other than 1.
+
+In other words:
+
+$$
+\gcd(e,\phi(n))=1
+$$
+
+The Euclidean algorithm lets us check this efficiently.
+
+
+
+
+```
+
+
+
+
+
+
+
+
+```
+
+
+
+
+# Step 5: Euclidean Algorithm
+
+def gcd(a, b):
+    """
+    Find the greatest common divisor of a and b.
+
+    Example: a=48, b=18
+    """
+
+    while b != 0:
+
+        # Divide a by b and get the remainder
+        remainder = a % b
+
+        print(f"{a} = {a//b}({b}) + {remainder}")
+
+        # Replace a with b, and b with remainder
+        a = b
+        b = remainder
+
+    # When b becomes zero, a is the GCD
+    return abs(a)
+
+
+print("GCD =", gcd(48, 18))
+
+# Verify using Python's built-in library
+import math
+print("Python math.gcd =", math.gcd(48, 18))
+
+
+
+
+
+
+---
+
+
