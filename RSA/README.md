@@ -703,10 +703,92 @@ for i in range(21):
 ```
 
 
+---
 
 
 
 
+## Step 4 — Finite Fields and Groups
+
+A **finite field** is a collection of numbers in which we can perform addition, subtraction, multiplication, and division (except division by zero), and the results remain in the same collection.
+
+For example, consider the integers modulo 7:
+
+$$
+F_7=\{0,1,2,3,4,5,6\}
+$$
+
+Because 7 is prime, these numbers form a finite field.
+
+**Example: Multiplication modulo 7**
+
+$$
+3\times5=15
+$$
+
+$$
+15\bmod7=1
+$$
+
+Notice something interesting: multiplying 3 by 5 produces 1 modulo 7.
+
+Therefore, **5 is the multiplicative inverse of 3 modulo 7**.
+
+This means division is possible:
+
+$$
+1/3 \equiv 5 \pmod 7
+$$
+
+A **group** is a mathematical structure with one operation, such as addition, that satisfies closure, associativity, identity, and inverses.
+
+A finite field has two compatible operations, addition and multiplication, with additional properties.
+
+**Cryptography connection:** Finite fields are used in AES, elliptic-curve cryptography, and other cryptographic algorithms.
+
+
+```
+
+
+
+
+# Step 4: Finite field modulo 7
+
+p = 7
+
+print("Multiplication table modulo 7\n")
+
+# Column headings
+print("    ", end="")
+for j in range(p):
+    print(f"{j:3}", end="")
+print()
+
+print("-" * 26)
+
+# Every result is reduced modulo 7
+for i in range(p):
+    print(f"{i:3} |", end="")
+
+    for j in range(p):
+        result = (i * j) % p
+        print(f"{result:3}", end="")
+
+    print()
+
+# Find multiplicative inverses
+print("\nMultiplicative inverses modulo 7:")
+
+for a in range(1, p):
+    for b in range(1, p):
+        if (a * b) % p == 1:
+            print(f"{a} inverse = {b}")
+            break
+
+
+
+
+```
 
 
 
