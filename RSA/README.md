@@ -666,9 +666,6 @@ Because $3^4=81$, and 81 divided by 7 leaves a remainder of 4.
 
 ```
 
-
-
-
 # Step 3: Modular Arithmetic
 
 mod = 7
@@ -695,8 +692,6 @@ print("Using pow():", pow(3, 4, mod))
 print("\nCounting modulo 7:")
 for i in range(21):
     print(f"{i} mod 7 = {i % 7}")
-
-
 
 
 
@@ -848,16 +843,6 @@ The Euclidean algorithm lets us check this efficiently.
 ```
 
 
-
-
-
-
-
-
-
-
-
-
 # Step 5: Euclidean Algorithm
 
 def gcd(a, b):
@@ -895,5 +880,170 @@ print("Python math.gcd =", math.gcd(48, 18))
 
 
 ---
+
+
+
+## Step 6 — Extended Euclidean Algorithm
+
+The Extended Euclidean Algorithm finds three values:
+
+- **GCD:** Greatest common divisor of two integers.
+- **s:** A coefficient multiplying the first integer.
+- **t:** A coefficient multiplying the second integer.
+
+These satisfy **Bézout's identity**:
+
+$$
+as+bt=\gcd(a,b)
+$$
+
+### Example: 48 and 18
+
+We already know:
+
+$$
+\gcd(48,18)=6
+$$
+
+But can we find two integers $s$ and $t$ such that:
+
+$$
+48s+18t=6
+$$
+
+Yes! Start with the Euclidean algorithm:
+
+$$
+48=2(18)+12
+$$
+
+$$
+18=1(12)+6
+$$
+
+Rearrange the second equation:
+
+$$
+6=18-12
+$$
+
+From the first equation:
+
+$$
+12=48-2(18)
+$$
+
+Substitute:
+
+$$
+6=18-(48-2(18))
+$$
+
+Simplify:
+
+$$
+6=(-1)(48)+(3)(18)
+$$
+
+Therefore:
+
+$$
+s=-1,\qquad t=3
+$$
+
+**Why this matters:** The Extended Euclidean Algorithm can find modular inverses, which are essential for generating RSA private keys.
+
+
+
+
+
+```
+
+
+
+# Step 6: Extended Euclidean Algorithm
+
+def extended_gcd(a, b):
+    """
+    Find gcd(a,b) and coefficients s,t such that:
+
+        a*s + b*t = gcd(a,b)
+
+    Example:
+        48*(-1) + 18*(3) = 6
+    """
+
+    # Save original inputs for verification
+    original_a, original_b = a, b
+
+    # Initially:
+    # a = 1*original_a + 0*original_b
+    # b = 0*original_a + 1*original_b
+    old_s, s = 1, 0
+    old_t, t = 0, 1
+
+    while b != 0:
+
+        # Integer quotient and remainder
+        q = a // b
+        remainder = a % b
+
+        print(f"{a} = {q}({b}) + {remainder}")
+
+        # Update the two remainders
+        a, b = b, remainder
+
+        # Update coefficients for original_a
+        old_s, s = s, old_s - q * s
+
+        # Update coefficients for original_b
+        old_t, t = t, old_t - q * t
+
+    print("\nGCD =", a)
+    print("s =", old_s)
+    print("t =", old_t)
+
+    # Verify Bézout's identity
+    print(f"Verification: "
+          f"{original_a}*({old_s}) + "
+          f"{original_b}*({old_t}) = "
+          f"{original_a*old_s + original_b*old_t}")
+
+    return a, old_s, old_t
+
+
+gcd_value, s, t = extended_gcd(48, 18)
+
+
+
+
+```
+
+
+expected output
+
+
+```
+
+48 = 2(18) + 12
+18 = 1(12) + 6
+12 = 2(6) + 0
+
+GCD = 6
+s = -1
+t = 3
+Verification: 48*(-1) + 18*(3) = 6
+
+
+
+```
+
+
+
+
+
+---
+
+
 
 
