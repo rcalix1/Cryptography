@@ -1045,5 +1045,141 @@ Verification: 48*(-1) + 18*(3) = 6
 ---
 
 
+## Step 7 — Modular Inverse and Division
 
+In ordinary arithmetic, dividing by 3 is the same as multiplying by $1/3$.
+
+In modular arithmetic, we cannot use ordinary fractions. Instead, we find a **modular inverse**.
+
+### Example: Find the inverse of 3 modulo 7
+
+We need a number $x$ such that:
+
+$$
+3x \bmod 7 = 1
+$$
+
+Let's try some numbers:
+
+| x | 3 × x | (3 × x) mod 7 |
+|---|---|---|
+| 1 | 3 | 3 |
+| 2 | 6 | 6 |
+| 3 | 9 | 2 |
+| 4 | 12 | 5 |
+| **5** | **15** | **1** |
+| 6 | 18 | 4 |
+
+**Answer: 5 is the modular inverse of 3 modulo 7.**
+
+Why? Because:
+
+$$
+3\times5=15
+$$
+
+$$
+15\bmod7=1
+$$
+
+### Example: Division modulo 7
+
+Suppose we want to calculate:
+
+$$
+4/3 \pmod 7
+$$
+
+We replace division by 3 with multiplication by its modular inverse, 5:
+
+$$
+4\times5\bmod7=6
+$$
+
+Therefore:
+
+$$
+4/3\equiv6\pmod7
+$$
+
+We can verify this by multiplying 6 by 3:
+
+$$
+6\times3\bmod7=4
+$$
+
+### When does an inverse exist?
+
+A modular inverse of $a$ modulo $m$ exists only when:
+
+$$
+\gcd(a,m)=1
+$$
+
+The Extended Euclidean Algorithm from Step 6 can calculate this inverse efficiently.
+
+**Cryptography connection:** RSA uses modular inverses to calculate the private exponent $d$ from the public exponent $e$.
+
+
+
+```
+
+
+
+# Step 7: Modular Inverse and Division
+
+# Example: Find the inverse of 3 modulo 7
+a = 3
+m = 7
+
+print("Finding inverse of 3 modulo 7:")
+
+# Try every possible nonzero remainder
+for x in range(1, m):
+
+    result = (a * x) % m
+
+    print(f"3 * {x} mod 7 = {result}")
+
+    if result == 1:
+        inverse = x
+        print("Found inverse:", inverse)
+        break
+
+# Example: Divide 4 by 3 modulo 7
+# Division becomes multiplication by the inverse
+numerator = 4
+
+answer = (numerator * inverse) % m
+
+print("\n4 / 3 modulo 7 =", answer)
+
+# Verify: multiplying the answer by 3
+# must recover the original numerator (mod 7)
+print("Verification:", (answer * 3) % m)
+
+# Python can calculate inverses directly
+print("\nPython inverse:", pow(3, -1, 7))
+
+# A modular inverse does not always exist
+# For example, 2 has no inverse modulo 6
+import math
+
+print("GCD(2,6) =", math.gcd(2, 6))
+print("Inverse exists?", math.gcd(2, 6) == 1)
+
+
+
+```
+
+
+
+---
+
+
+
+
+
+
+---
 
