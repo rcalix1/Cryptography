@@ -381,6 +381,85 @@ def encrypt(ptext, pk, mod):
 ```
 
 
+---
+
+
+## Step 1 — Divisibility and Prime Numbers
+
+A number $a$ divides another number $b$ if the remainder of dividing $b$ by $a$ is zero.
+
+$$
+b \bmod a = 0
+$$
+
+For example:
+
+$$
+35 \bmod 7 = 0
+$$
+
+Therefore, 7 divides 35.
+
+A **prime number** is an integer greater than 1 that has exactly two positive divisors: 1 and itself.
+
+Examples:
+
+- 7 is prime: divisors are 1 and 7.
+- 12 is not prime: divisors are 1, 2, 3, 4, 6, 12.
+- 1 is neither prime nor composite.
+
+**Why this matters in cryptography:** Large prime numbers are fundamental to public-key cryptographic algorithms such as RSA.
+
+
+```
+
+
+
+
+# Step 1: Divisibility and prime numbers
+
+def get_divisors(n):
+    """Find all positive integers that divide n exactly."""
+    divisors = []
+
+    for i in range(1, n + 1):
+        if n % i == 0:   # % computes the remainder
+            divisors.append(i)
+
+    return divisors
+
+
+def is_prime(n):
+    """A prime has exactly two positive divisors."""
+    if n < 2:
+        return False
+
+    return len(get_divisors(n)) == 2
+
+
+# Example 1: Divisibility
+a = 7
+b = 35
+
+print("Remainder:", b % a)
+print("Does 7 divide 35?", b % a == 0)
+
+# Example 2: Prime numbers
+for n in [1, 7, 12, 13, 21, 29]:
+    print(f"{n}: divisors = {get_divisors(n)}, "
+          f"prime = {is_prime(n)}")
+
+
+
+
+```
+
+
+
+
+
+---
+
 
 
 
