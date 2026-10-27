@@ -460,6 +460,102 @@ for n in [1, 7, 12, 13, 21, 29]:
 
 ---
 
+## Step 2 — Generating Prime Numbers: Sieve of Eratosthenes
+
+The **Sieve of Eratosthenes** is an efficient algorithm for finding all prime numbers up to a given limit $n$.
+
+**Algorithm:**
+
+1. Create a list of integers from 2 to $n$.
+2. Start with 2, the first prime number.
+3. Eliminate all multiples of 2 (except 2 itself).
+4. Move to the next remaining number (3) and eliminate its multiples.
+5. Continue until reaching $\sqrt{n}$.
+
+**Why stop at $\sqrt{n}$?**
+
+Every composite number $n$ has at least one prime divisor less than or equal to $\sqrt{n}$. Therefore, all composite numbers will have been eliminated by that point.
+
+For example, to find primes up to 30, we only need to check prime divisors up to:
+
+$$
+\sqrt{30} \approx 5.48
+$$
+
+The resulting primes are:
+
+$$
+2,3,5,7,11,13,17,19,23,29
+$$
+
+**Cryptography connection:** Generating small primes is useful when testing candidate numbers for large-prime generation in public-key cryptography.
+
+
+
+```
+
+
+
+# Step 2: Sieve of Eratosthenes
+
+def sieve(n):
+    """
+    Find all prime numbers from 2 to n.
+
+    is_prime[i] = True means i is still
+    considered a possible prime.
+    """
+
+    # Initially assume all numbers are prime
+    is_prime = [True] * (n + 1)
+
+    # 0 and 1 are not prime
+    is_prime[0] = False
+    is_prime[1] = False
+
+    # Only check candidates up to sqrt(n)
+    for p in range(2, int(n**0.5) + 1):
+
+        if is_prime[p]:
+
+            # Mark multiples of p as composite
+            # Start at p*p because smaller
+            # multiples were already eliminated
+            for multiple in range(p*p, n + 1, p):
+                is_prime[multiple] = False
+
+    # Collect numbers still marked as prime
+    primes = []
+
+    for i in range(2, n + 1):
+        if is_prime[i]:
+            primes.append(i)
+
+    return primes
+
+
+# Example: Generate primes up to 100
+n = 100
+
+primes = sieve(n)
+
+print("Prime numbers up to", n)
+print(primes)
+print("Number of primes:", len(primes))
+
+
+
+
+
+```
+
+
+
+
+---
+
+
+
 
 
 
