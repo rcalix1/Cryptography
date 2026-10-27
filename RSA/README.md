@@ -602,8 +602,115 @@ print("Number of primes:", len(primes))
 
 
 
+## Step 3 — Modular Arithmetic
+
+**Modular arithmetic is like a clock.** When we reach a certain number, we start counting again from zero.
+
+For example, with modulo 7, the only possible remainders are:
+
+$$
+0,1,2,3,4,5,6
+$$
+
+### 1. Basic Modulo
+
+The modulo operator gives us the **remainder after division**.
+
+For example:
+
+$$
+17 \bmod 7 = 3
+$$
+
+Because:
+
+$$
+17 = 2(7)+3
+$$
+
+### 2. Modular Addition
+
+$$
+(5+6)\bmod 7=4
+$$
+
+We add 5 + 6 = 11, then divide by 7. The remainder is 4.
+
+### 3. Modular Subtraction
+
+$$
+(3-5)\bmod 7=5
+$$
+
+Since 3 − 5 = −2, we wrap around modulo 7 and obtain 5.
+
+### 4. Modular Multiplication
+
+$$
+(4\times5)\bmod7=6
+$$
+
+Because 20 divided by 7 leaves a remainder of 6.
+
+### 5. Modular Exponentiation
+
+$$
+3^4\bmod7=4
+$$
+
+Because $3^4=81$, and 81 divided by 7 leaves a remainder of 4.
+
+**Why this matters in cryptography:** RSA and Diffie–Hellman use modular exponentiation with very large integers.
 
 
 
+```
+
+
+
+
+# Step 3: Modular Arithmetic
+
+mod = 7
+
+# Basic modulo
+print("17 mod 7 =", 17 % mod)
+
+# Addition
+print("(5 + 6) mod 7 =", (5 + 6) % mod)
+
+# Subtraction
+print("(3 - 5) mod 7 =", (3 - 5) % mod)
+
+# Multiplication
+print("(4 * 5) mod 7 =", (4 * 5) % mod)
+
+# Exponentiation
+print("3^4 mod 7 =", (3**4) % mod)
+
+# Python's efficient modular exponentiation
+print("Using pow():", pow(3, 4, mod))
+
+# Demonstrate the wrap-around
+print("\nCounting modulo 7:")
+for i in range(21):
+    print(f"{i} mod 7 = {i % 7}")
+
+
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+---
 
 
