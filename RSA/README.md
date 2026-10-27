@@ -854,7 +854,6 @@ The Euclidean algorithm lets us check this efficiently.
 
 
 
-```
 
 
 
@@ -891,6 +890,7 @@ print("Python math.gcd =", math.gcd(48, 18))
 
 
 
+```
 
 
 
