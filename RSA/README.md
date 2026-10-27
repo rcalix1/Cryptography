@@ -492,6 +492,51 @@ $$
 
 
 
+### Sieve of Eratosthenes — Visual Example
+
+We want all prime numbers between 1 and 30.
+
+1. Write down numbers 2 through 30.
+2. Start at **2**. Keep 2, but cross out its multiples: 4, 6, 8, 10...
+3. Move to **3**. Keep 3, but cross out its multiples: 6, 9, 12, 15...
+4. Move to **5**. Keep 5, but cross out its multiples: 10, 15, 20, 25...
+5. **Everything left is prime!**
+
+### Final Result
+
+| | | | | | |
+|---|---|---|---|---|---|
+| 1 | **2** | **3** | ~~4~~ | **5** | ~~6~~ |
+| **7** | ~~8~~ | ~~9~~ | ~~10~~ | **11** | ~~12~~ |
+| **13** | ~~14~~ | ~~15~~ | ~~16~~ | **17** | ~~18~~ |
+| **19** | ~~20~~ | ~~21~~ | ~~22~~ | **23** | ~~24~~ |
+| ~~25~~ | ~~26~~ | ~~27~~ | ~~28~~ | **29** | ~~30~~ |
+
+**Bold** = prime number  
+~~Crossed out~~ = composite number  
+1 = neither prime nor composite
+
+### Why Stop at the Square Root?
+
+For numbers up to 30:
+
+$$
+\sqrt{30} \approx 5.48
+$$
+
+Every composite number up to 30 has at least one prime factor no greater than 5.48.
+
+Therefore, we only need to check multiples of **2, 3, and 5**.
+
+**Key idea:** Instead of testing every number individually, eliminate multiples of known primes. The numbers remaining are prime.
+
+**Cryptography connection:** The Sieve of Eratosthenes efficiently generates small primes, which can help eliminate unsuitable candidates when generating large primes for public-key cryptography.
+
+
+
+
+
+
 ```
 
 
