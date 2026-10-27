@@ -1177,7 +1177,153 @@ print("Inverse exists?", math.gcd(2, 6) == 1)
 ---
 
 
+## Step 8 — Large Prime Numbers and Cryptography
 
+Cryptographic algorithms such as RSA require very large prime numbers.
+
+For small numbers, we can test divisibility directly. But for numbers containing hundreds of digits, checking every divisor is impractical.
+
+### How do computers find large primes?
+
+1. Generate a large random odd number.
+2. Test whether it is probably prime.
+3. If the test fails, generate another candidate.
+4. Repeat until a suitable prime is found.
+
+### Fermat's Little Theorem
+
+If $p$ is prime and $a$ is not divisible by $p$, then:
+
+$$
+a^{p-1}\bmod p=1
+$$
+
+For example, choose $p=7$ and $a=3$:
+
+$$
+3^6=729
+$$
+
+$$
+729\bmod7=1
+$$
+
+This property can help test whether a number might be prime.
+
+**Important:** Passing Fermat's test does not prove a number is prime. Some composite numbers also pass. Modern cryptographic software commonly uses stronger tests such as Miller–Rabin.
+
+### Connection to RSA
+
+RSA begins by selecting two large primes:
+
+$$
+n=pq
+$$
+
+Multiplying the primes is easy, but recovering the original prime factors from a sufficiently large, properly generated RSA modulus is computationally difficult.
+
+This difficulty is central to RSA security.
+
+
+
+
+```
+
+
+import secrets
+
+# Example 1: Fermat's Little Theorem
+
+p = 7
+a = 3
+
+# pow(a, exponent, modulus) efficiently computes
+# (a ** exponent) % modulus without building
+# the potentially enormous intermediate number.
+
+result = pow(a, p - 1, p)
+
+print("Fermat test for 7:", result)
+print("Passes?", result == 1)
+
+
+# Example 2: Miller-Rabin probable-prime test
+
+def is_probable_prime(n, rounds=20):
+    """
+    Test whether n is probably prime.
+
+    Returns False if n is definitely composite.
+    Returns True if n passes all rounds.
+    """
+    if n < 2:
+        return False
+
+    if n in (2, 3):
+        return True
+
+    if n % 2 == 0:
+        return False
+
+    # Write n-1 as d * 2^s, where d is odd.
+    d = n - 1
+    s = 0
+
+    while d % 2 == 0:
+        d //= 2
+        s += 1
+
+    # Test random bases
+    for _ in range(rounds):
+        a = secrets.randbelow(n - 3) + 2
+
+        x = pow(a, d, n)
+
+        if x == 1 or x == n - 1:
+            continue
+
+        for _ in range(s - 1):
+            x = pow(x, 2, n)
+
+            if x == n - 1:
+                break
+        else:
+            return False
+
+    return True
+
+
+# Example 3: Generate a 128-bit probable prime
+
+def generate_prime(bits):
+    """Generate a random probable prime of given size."""
+
+    while True:
+        n = secrets.randbits(bits)
+
+        # Force the highest bit to 1 so n has
+        # exactly the requested bit length.
+        n |= (1 << (bits - 1))
+
+        # Force the last bit to 1 (odd number).
+        n |= 1
+
+        if is_probable_prime(n):
+            return n
+
+
+prime = generate_prime(128)
+
+print("\nGenerated probable prime:")
+print(prime)
+
+print("\nBit length:", prime.bit_length())
+print("Passes Miller-Rabin:", is_probable_prime(prime))
+
+
+
+
+```
 
 
 
